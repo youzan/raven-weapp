@@ -1,7 +1,7 @@
 {
   "name": "@youzan/raven-weapp",
-  "version": "0.0.4",
-  "description": "raven for weapp",
+  "version": "0.0.5",
+  "description": "Sentry SDK for WeApp",
   "main": "index.js",
   "scripts": {
     "build": "grunt build",
