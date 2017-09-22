@@ -3,7 +3,7 @@
 为方便小程序接入sentry，由raven改写而来的小程序版本。
 
 #### 引入文件
-由于新版的开发者工具不支持从node_modules中引入（不清楚正式版会如何），因此以npm方式安装的话只能手动将raven-weapp/dist目录下需要的文件拷贝到其他文件中，在app.js中引入，例如：
+由于目前小程序不支持从node_modules中引入文件，因此以npm方式安装的话只能手动将raven-weapp/dist目录下需要的文件拷贝到其他文件中，在app.js中引入，例如：
 
 ```
 var Raven = require('./utils/raven-weapp/build/raven')
@@ -38,7 +38,7 @@ options = {
 可以通过[Raven.setUserContext(context)](https://docs.sentry.io/learn/context/#capturing-the-user)或者[Raven.setExtraContext(context)](https://docs.sentry.io/learn/context/#extra-context)添加更多信息（kdtId和userId等）
 ##### 用户行为
 ###### console
-console的行为将被自动收集（然而还不知道是否线上console是否有效）
+console的行为默认将被自动收集
 ###### ajax
 wx.request不可扩展，因此只能手动收集请求的行为：例如在经过封装的请求函数的成功回调内添加：
 ```

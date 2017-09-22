@@ -1,0 +1,20 @@
+{
+  "name": "@youzan/raven-weapp",
+  "description": "Sentry SDK for WeApp",
+  "main": "index.js",
+  "authors": [
+    "panchen"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/everywill/raven-weapp",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "src",
+    "vendor",
+    "bower_components",
+    "test",
+    "tests",
+    "*.md"
+  ]
+}
