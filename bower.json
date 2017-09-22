@@ -1,5 +1,6 @@
 {
   "name": "@youzan/raven-weapp",
+  "version": "0.0.1",
   "description": "Sentry SDK for WeApp",
   "main": "index.js",
   "authors": [
@@ -9,6 +10,7 @@
   "homepage": "https://github.com/everywill/raven-weapp",
   "ignore": [
     "**/.*",
+    "Gruntfile.js"
     "node_modules",
     "src",
     "vendor",
