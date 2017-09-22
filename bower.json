@@ -10,7 +10,7 @@
   "homepage": "https://github.com/everywill/raven-weapp",
   "ignore": [
     "**/.*",
-    "Gruntfile.js"
+    "Gruntfile.js",
     "node_modules",
     "src",
     "vendor",
