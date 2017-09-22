@@ -1,5 +1,5 @@
 {
-  "name": "@youzan/raven-weapp",
+  "name": "raven-weapp",
   "version": "0.0.1",
   "description": "Sentry SDK for WeApp",
   "main": "index.js",
