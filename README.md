@@ -8,6 +8,11 @@
 ```
 var Raven = require('./utils/raven-weapp/build/raven')
 ```
+或以Bower安装raven-weapp并引入：
+
+```
+var Raven = require('./bower_components/raven-weapp/build/raven')
+```
 #### 初始化Raven
 
 ```
