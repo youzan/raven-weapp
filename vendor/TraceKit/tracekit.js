@@ -30,11 +30,12 @@ var UNKNOWN_FUNCTION = '?';
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#Error_types
 var ERROR_TYPES_RE = /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/;
 
-function getLocationHref() {
-  /* 小程序的当前页面路径
+var getLocationHref = function () {
+  /*
   if (typeof document === 'undefined' || document.location == null) return '';
   return document.location.href;
   */
+  // 小程序的当前页面路径
   var pageStack = getCurrentPages();
   if (pageStack && pageStack.length) {
     return pageStack[pageStack.length - 1].route;
@@ -376,9 +377,10 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
   function computeStackTraceFromStackProp(ex) {
     if (typeof ex.stack === 'undefined' || !ex.stack) return;
 
-    var chrome = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
-      gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|\[native).*?|[^@]*bundle)(?::(\d+))?(?::(\d+))?\s*$/i,
-      winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
+    var // chrome = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
+      // gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|\[native).*?|[^@]*bundle)(?::(\d+))?(?::(\d+))?\s*$/i,
+      // winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
+      weappAndriod = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
       // Used to additionally parse URL/line/column from eval frames
       geckoEval = /(\S+) line (\d+)(?: > eval line \d+)* > eval/i,
       chromeEval = /\((\S*)(?::(\d+))(?::(\d+))\)/,
@@ -390,6 +392,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
       reference = /^(.*) is undefined$/.exec(ex.message);
 
     for (var i = 0, j = lines.length; i < j; ++i) {
+      /*
       if ((parts = chrome.exec(lines[i]))) {
         var isNative = parts[2] && parts[2].indexOf('native') === 0; // start of line
         var isEval = parts[2] && parts[2].indexOf('eval') === 0; // start of line
@@ -437,6 +440,27 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
         };
       } else {
         continue;
+      }
+      */
+
+     if ((parts = weappAndriod.exec(lines[i]))) {
+        var isNative = parts[2] && parts[2].indexOf('native') === 0; // start of line
+        var isEval = parts[2] && parts[2].indexOf('eval') === 0; // start of line
+        if (isEval && (submatch = chromeEval.exec(parts[2]))) {
+          // throw out eval line/column and use top-most line/column number
+          parts[2] = submatch[1]; // url
+          parts[3] = submatch[2]; // line
+          parts[4] = submatch[3]; // column
+        }
+        element = {
+          url: !isNative ? parts[2] : null,
+          func: parts[1] || UNKNOWN_FUNCTION,
+          args: isNative ? [parts[2]] : [],
+          line: parts[3] ? +parts[3] : null,
+          column: parts[4] ? +parts[4] : null
+        };
+      } else {
+        continue
       }
 
       if (!element.func && element.line) {
