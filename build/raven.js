@@ -458,9 +458,8 @@ Raven.prototype = {
   captureException: function(ex, options) {
     // If not an Error is passed through, recall as a message instead
     if (Object.prototype.toString.call(ex) === '[object String]' && ex.indexOf('thirdScriptError') !== -1) {
-      // 小程序js报错
+      // 小程序js报错适配安卓机的错误
       var parts = ex.split('\n')
-      ex.type = 'Error'
       ex = new Error(parts[1])
       ex.name = parts[0]
       parts.shift()
@@ -2796,7 +2795,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
     var // chrome = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
       // gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|\[native).*?|[^@]*bundle)(?::(\d+))?(?::(\d+))?\s*$/i,
       // winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
-      weapp = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
+      weappAndriod = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
       // Used to additionally parse URL/line/column from eval frames
       geckoEval = /(\S+) line (\d+)(?: > eval line \d+)* > eval/i,
       chromeEval = /\((\S*)(?::(\d+))(?::(\d+))\)/,
@@ -2859,7 +2858,7 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
       }
       */
 
-     if ((parts = weapp.exec(lines[i]))) {
+     if ((parts = weappAndriod.exec(lines[i]))) {
         var isNative = parts[2] && parts[2].indexOf('native') === 0; // start of line
         var isEval = parts[2] && parts[2].indexOf('eval') === 0; // start of line
         if (isEval && (submatch = chromeEval.exec(parts[2]))) {
