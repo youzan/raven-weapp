@@ -1,12 +1,12 @@
 'use strict';
 
-function isObject(what) {
+var isObject = function (what) {
   return typeof what === 'object' && what !== null;
 }
 
 // Yanked from https://git.io/vS8DV re-used under CC0
 // with some tiny modifications
-function isError(value) {
+var isError = function (value) {
   switch (Object.prototype.toString.call(value)) {
     case '[object Error]':
       return true;
@@ -19,7 +19,7 @@ function isError(value) {
   }
 }
 
-function wrappedCallback(callback) {
+var wrappedCallback = function (callback) {
   function dataCallback(data, original) {
     var normalizedData = callback(data) || data;
     if (original) {

@@ -100,7 +100,7 @@ Raven.prototype = {
   // webpack (using a build step causes webpack #1617). Grunt verifies that
   // this value matches package.json during build.
   //   See: https://github.com/getsentry/raven-js/issues/465
-  VERSION: '0.0.1',
+  VERSION: '0.0.7',
 
   debug: false,
 
@@ -400,6 +400,15 @@ Raven.prototype = {
      */
   captureException: function(ex, options) {
     // If not an Error is passed through, recall as a message instead
+    if (Object.prototype.toString.call(ex) === '[object String]' && ex.indexOf('thirdScriptError') !== -1) {
+      // 小程序js报错适配安卓机的错误
+      var parts = ex.split('\n')
+      ex = new Error(parts[1])
+      ex.name = parts[0]
+      parts.shift()
+      parts.shift()
+      ex.stack = parts.join('\n')
+    }
     if (!isError(ex)) {
       return this.captureMessage(
         ex,
