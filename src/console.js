@@ -1,6 +1,6 @@
 'use strict';
 
-var wrapMethod = function(console, level, callback) {
+var wrapMethod = function (console, level, callback) {
   var originalConsoleLevel = console[level];
   var originalConsole = console;
 
@@ -10,11 +10,16 @@ var wrapMethod = function(console, level, callback) {
 
   var sentryLevel = level === 'warn' ? 'warning' : level;
 
-  console[level] = function() {
+  console[level] = function () {
     var args = [].slice.call(arguments);
 
-    var msg = '' + args.join(' ');
-    var data = {level: sentryLevel, logger: 'console', extra: {arguments: args}};
+    var msg = '' + args.map(function (arg) {
+      if (typeof arg === 'object') {
+        return JSON.stringify(arg);
+      }
+      return arg;
+    }).join(' ');
+    var data = { level: sentryLevel, logger: 'console', extra: { arguments: args } };
 
     if (level === 'assert') {
       if (args[0] === false) {
