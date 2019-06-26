@@ -847,7 +847,8 @@ Raven.prototype = {
     if (_document.createEvent) {
       evt = _document.createEvent('HTMLEvents');
       evt.initEvent(eventType, true, true);
-    } else {
+    } 
+    if (_document.createEventObject) {
       evt = _document.createEventObject();
       evt.eventType = eventType;
     }
@@ -860,7 +861,9 @@ Raven.prototype = {
     if (_document.createEvent) {
       // IE9 if standards
       _document.dispatchEvent(evt);
-    } else {
+      return;
+    } 
+    if (_document.createEventObject) {
       // IE8 regardless of Quirks or Standards
       // IE9 if quirks
       try {
